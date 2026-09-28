@@ -1,156 +1,109 @@
 # Uptown Spaces - Lead Management System
 
-A full-stack Real Estate CRM application for tracking buyers, properties, follow-up logs, and pipeline conversion stages. Built with React (TypeScript + Vite + Tailwind CSS) on the frontend and Node.js (Express + Prisma + PostgreSQL) on the backend.
-
----
+A full-stack real estate CRM for managing buyer enquiries, property preferences, follow-up notes, and pipeline stages. The frontend uses React, TypeScript, and Vite. The backend uses Node.js, Express, Prisma, and PostgreSQL.
 
 ## Features
 
-- **Dashboard Overview**: Key indicators including total active leads, total pipeline valuation (in Lakh / Cr), closed conversions, and win percentage.
-- **Lead Directory & Board**: View leads in a structured data table or interactive pipeline Kanban board.
-- **Filter & Search**: Search by name, phone, email, or property location. Filter by Lead Status, Lead Source, and Property Type.
-- **Activity & Notes**: Log follow-up notes for each property buyer with full timestamp tracking.
-- **Data Validation**: Strict runtime schema validation using Zod for requests and responses.
-
----
+- Dashboard with lead and pipeline summaries.
+- Lead directory with search, filters, sorting, and pagination.
+- Table and Kanban board views.
+- Lead details with property preferences and follow-up notes.
+- Create, update, and delete lead records.
+- Request validation with Zod.
 
 ## Tech Stack
 
-### Frontend
-- **Framework**: React 18 + Vite (TypeScript)
-- **Styling**: Tailwind CSS + Custom Human Design System
-- **State & Data Fetching**: TanStack React Query
-- **Icons & UI**: Lucide React
-- **Forms & Validation**: React Hook Form + Zod
+**Frontend:** React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, React Hook Form, Zod, and Lucide React.
 
-### Backend
-- **Runtime**: Node.js + Express (TypeScript)
-- **Database & ORM**: PostgreSQL + Prisma ORM
-- **Validation**: Zod schema validation middleware
-
----
+**Backend:** Node.js, Express, TypeScript, Prisma ORM, PostgreSQL, and Zod.
 
 ## Repository Structure
 
 ```text
 Lead-Management-System/
-├── backend/                # Express REST API & Prisma schema
-│   ├── prisma/             # Schema definitions and database migrations
-│   ├── src/                # Controllers, routes, validators, middleware
-│   └── .env.example        # Environment variables template
-├── frontend/               # React Vite web client
-│   ├── src/                # Layouts, pages, components, API client
-│   └── .env.example        # Frontend environment configuration
+├── backend/
+│   ├── api/                 # Vercel serverless function entry point
+│   ├── prisma/              # Prisma schema and migrations
+│   └── src/                 # Express app, routes, controllers, and validation
+├── frontend/
+│   └── src/                 # React pages, components, and API client
+├── presentation/            # Project presentation
 └── README.md
 ```
 
----
-
 ## Prerequisites
 
-Before starting, ensure you have installed:
-- **Node.js**: v18.0 or higher
-- **npm**: v9.0 or higher
-- **PostgreSQL**: Local PostgreSQL instance or a hosted database service (e.g. Neon DB)
+- Node.js 18 or later
+- npm 9 or later
+- PostgreSQL locally or through a hosted provider such as Neon
 
----
+## Local Setup
 
-## Local Setup & Installation
+### Backend
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/vikasv13579/uptown-spaces.git
-cd Lead-Management-System
-```
-
----
-
-### 2. Backend Setup
-
-1. **Navigate to the backend directory**:
+1. Open a terminal in `backend`:
    ```bash
    cd backend
-   ```
-
-2. **Install dependencies**:
-   ```bash
    npm install
    ```
-
-3. **Configure Environment Variables**:
-   Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
-   Open `.env` and set your database connection string and port settings:
+2. Copy `.env.example` to `.env` and set the database connection string:
    ```env
    PORT=5000
    NODE_ENV=development
    DATABASE_URL="postgresql://username:password@localhost:5432/lead_management_db?schema=public"
    CORS_ORIGIN="http://localhost:5173"
    ```
-
-4. **Database Migrations & Prisma Setup**:
-   Generate the Prisma Client and run migrations to create the database schema:
+3. Generate Prisma Client and apply the development migration:
    ```bash
    npm run db:generate
    npm run db:migrate
    ```
-
-5. **Start the Backend Server**:
+4. Start the backend:
    ```bash
    npm run dev
    ```
-   The backend API will run on `http://localhost:5000`.
+   The local API runs at `http://localhost:5000`.
 
----
+### Frontend
 
-### 3. Frontend Setup
-
-1. **Open a new terminal window** and navigate to the frontend directory:
+1. Open a second terminal in `frontend`:
    ```bash
    cd frontend
-   ```
-
-2. **Install dependencies**:
-   ```bash
    npm install
    ```
-
-3. **Configure Environment Variables**:
-   Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   Verify the environment setting in `.env`:
+2. Copy `.env.example` to `.env`. For local development, set:
    ```env
-   VITE_API_URL=http://localhost:5000/api
+   VITE_API_BASE_URL=http://localhost:5000/api/v1
    ```
-
-4. **Start the Development Server**:
+3. Start the frontend:
    ```bash
    npm run dev
    ```
-   The application UI will run on `http://localhost:5173`.
+   Vite serves the app at `http://localhost:5173`.
 
----
+## Deployment
 
-## API Summary
+- **Frontend Vercel project dashboard:** https://vercel.com/vikasv13579s-projects/uptown-spaces-frontend
+- **Backend API base URL:** `https://uptown-spaces-orcin.vercel.app/api/v1`
+- **Example leads endpoint:** https://uptown-spaces-orcin.vercel.app/api/v1/leads?page=1&limit=10
+
+The frontend URL above is the Vercel project dashboard, not the public website. To get the public website URL, open the Vercel project and copy its Production Domain. In the frontend Vercel project's environment variables, set `VITE_API_BASE_URL` to `https://uptown-spaces-orcin.vercel.app/api/v1`, then redeploy the frontend.
+
+## API Endpoints
+
+All API routes use the `/api/v1` prefix.
 
 | Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/health` | Service health status |
-| `GET` | `/api/leads` | Query leads with search, filter, and pagination |
-| `GET` | `/api/leads/stats` | Retrieve dashboard KPI counts and pipeline breakdown |
-| `GET` | `/api/leads/:id` | Get details for a single lead |
-| `POST` | `/api/leads` | Register a new client lead |
-| `PATCH` | `/api/leads/:id` | Update lead status or contact information |
-| `DELETE` | `/api/leads/:id` | Remove a lead from the CRM |
-| `GET` | `/api/leads/:id/notes` | Fetch notes for a lead |
-| `POST` | `/api/leads/:id/notes` | Create a new follow-up note |
-
----
+| --- | --- | --- |
+| `GET` | `/api/v1/health` | Check API health |
+| `GET` | `/api/v1/leads` | List leads; supports search, filters, sorting, and pagination |
+| `GET` | `/api/v1/leads/stats` | Get dashboard lead and pipeline statistics |
+| `GET` | `/api/v1/leads/:id` | Get one lead |
+| `POST` | `/api/v1/leads` | Create a lead |
+| `PATCH` | `/api/v1/leads/:id` | Update a lead |
+| `DELETE` | `/api/v1/leads/:id` | Delete a lead |
+| `GET` | `/api/v1/leads/:id/notes` | List notes for a lead |
+| `POST` | `/api/v1/leads/:id/notes` | Add a note to a lead |
 
 ## License
 
