@@ -6,7 +6,7 @@ import leadRouter from './routes/lead.route.js';
 
 const app = express();
 
-app.use(cors({ origin: config.corsOrigin, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // API Routes
