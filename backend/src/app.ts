@@ -9,9 +9,15 @@ const app = express();
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
-// API Routes
-app.use(config.apiPrefix, healthRouter);
-app.use(`${config.apiPrefix}/leads`, leadRouter);
+// API Sub-Router
+const apiRouter = express.Router();
+apiRouter.use('/health', healthRouter);
+apiRouter.use('/leads', leadRouter);
+
+// Mount on path prefixes for serverless resilience
+app.use(config.apiPrefix, apiRouter);
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // 404 handler
 app.use((req, res) => {
