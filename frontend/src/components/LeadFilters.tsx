@@ -145,6 +145,22 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
           <option value="COMMERCIAL">Commercial</option>
         </select>
 
+        {/* Sort By Filter */}
+        <select
+          value={`${filters.sortBy || 'createdAt'}_${filters.sortOrder || 'desc'}`}
+          onChange={(e) => {
+            const [sortBy, sortOrder] = e.target.value.split('_');
+            onChange({ ...filters, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 });
+          }}
+          className="px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+        >
+          <option value="createdAt_desc">Sort: Date (Newest First)</option>
+          <option value="createdAt_asc">Sort: Date (Oldest First)</option>
+          <option value="budget_desc">Sort: Budget (High to Low)</option>
+          <option value="budget_asc">Sort: Budget (Low to High)</option>
+          <option value="name_asc">Sort: Name (A-Z)</option>
+        </select>
+
         {hasActiveFilters && (
           <button
             onClick={handleReset}
