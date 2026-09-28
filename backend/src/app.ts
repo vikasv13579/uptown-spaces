@@ -9,15 +9,15 @@ const app = express();
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
-// API Sub-Router
-const apiRouter = express.Router();
-apiRouter.use('/health', healthRouter);
-apiRouter.use('/leads', leadRouter);
+// Health route at /health (for direct serverless access)
+app.use('/health', healthRouter);
 
-// Mount on path prefixes for serverless resilience
-app.use(config.apiPrefix, apiRouter);
-app.use('/api', apiRouter);
-app.use('/', apiRouter);
+// API Routes with /api/v1 prefix
+app.use(`${config.apiPrefix}`, healthRouter);
+app.use(`${config.apiPrefix}/leads`, leadRouter);
+
+// Also mount under /leads for when Vercel strips /api prefix
+app.use('/leads', leadRouter);
 
 // 404 handler
 app.use((req, res) => {
@@ -35,9 +35,7 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     success: false,
     message: err.message || 'Internal Server Error',
     error: err.toString(),
-    stack: err.stack,
   });
 });
 
 export default app;
-
