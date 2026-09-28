@@ -1,0 +1,70 @@
+// Prisma schema file for PostgreSQL (Neon)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PropertyType {
+  ONE_BHK
+  TWO_BHK
+  THREE_BHK
+  PLOT
+  VILLA
+  COMMERCIAL
+  OTHER
+}
+
+enum LeadSource {
+  FACEBOOK
+  GOOGLE
+  REFERRAL
+  WEBSITE
+  WALK_IN
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  SITE_VISIT
+  CLOSED
+}
+
+model Lead {
+  id           String       @id @default(uuid())
+  name         String
+  phone        String
+  email        String
+  budget       Decimal      @db.Decimal(12, 2)
+  location     String
+  propertyType PropertyType
+  source       LeadSource
+  status       LeadStatus   @default(NEW)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  notes        LeadNote[]
+
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+  @@index([budget])
+  @@index([name])
+  @@index([phone])
+}
+
+model LeadNote {
+  id        String   @id @default(uuid())
+  leadId    String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
