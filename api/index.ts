@@ -1,5 +1,5 @@
-import app from '../backend/src/app.js';
-import { seedSampleDataIfEmpty } from '../backend/src/lib/seed.js';
+import app from '../backend/src/app';
+import { seedSampleDataIfEmpty } from '../backend/src/lib/seed';
 
 // Lazy database seed check on Vercel serverless cold-start
 seedSampleDataIfEmpty().catch((err) => {
