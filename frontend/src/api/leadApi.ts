@@ -85,7 +85,7 @@ export interface CreateLeadInput {
 
 export interface UpdateLeadInput extends Partial<CreateLeadInput> {}
 
-const API_BASE = '/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 async function handleResponse<T>(response: Response): Promise<T> {
   const json = await response.json();
