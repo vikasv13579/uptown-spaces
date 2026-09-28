@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { prisma } from '../src/lib/prisma';
+import { getHealth } from '../src/controllers/health.controller';
 import leadRouter from '../src/routes/lead.route';
 import healthRouter from '../src/routes/health.route';
 
@@ -10,6 +11,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 
 // Routes
+app.get('/', getHealth);
 app.use('/health', healthRouter);
 app.use('/api/v1/health', healthRouter);
 app.use('/api/v1/leads', leadRouter);
